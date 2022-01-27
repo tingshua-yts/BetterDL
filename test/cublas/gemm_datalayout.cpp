@@ -49,6 +49,11 @@ int main()
       }
     }
 
+    /*
+      A:
+      1.0000  1.0000  1.0000
+      2.0000  2.0000  2.0000
+    */
     std::cout << "A:" << std::endl;
     printPlainMatrix(A, M, K);
 
@@ -59,7 +64,12 @@ int main()
         B[IDX2C(i, j, N)] = i + 1;
       }
     }
-
+    /*
+      B:
+      1.0000  1.0000
+      2.0000  2.0000
+      3.0000  3.0000
+    */
     std::cout << "B:" << std::endl;
     printPlainMatrix(B, K, N);
 
@@ -83,6 +93,13 @@ int main()
         C, M);
 
     cudaDeviceSynchronize();
+    /*
+      C out:
+      6.0000 12.0000
+      6.0000 12.0000
+      C host memory layout:
+      6.0000  12.0000 6.0000  12.0000
+    */
     std::cout << "C out:" << std::endl;
 
     printPlainMatrix(C, M, N);
