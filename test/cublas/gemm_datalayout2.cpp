@@ -85,11 +85,11 @@ int main()
 
     // Gemm
     cublasSgemm(handle,
-                CUBLAS_OP_N,// 通过转置变为逻辑上的matrix
-                CUBLAS_OP_N, // 同上
-                N, // 逻辑上A和C的row的个数
-                M, // 逻辑上B和C的column的个数
-                K, // 逻辑上A的column个数和B的row 的个数
+                CUBLAS_OP_N,
+                CUBLAS_OP_N,
+                N,
+                M,
+                K,
                 &alpha,
                 B,
                 N,
