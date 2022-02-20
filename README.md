@@ -1,2 +1,2 @@
 # BetterDL
-Hello BeeterDL
+This project used for learning how to write self AI Framework
