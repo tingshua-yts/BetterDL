@@ -60,7 +60,7 @@ int main(int argc, char** argv)
         x,
         beta,
         x_desc,
-        x
+        xs
     );
 
     cudnnDestroy(handle_);
