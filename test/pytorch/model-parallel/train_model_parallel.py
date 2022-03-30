@@ -35,7 +35,7 @@ class ModelParallelResNet50(ResNet):
 
 def train(model):
     num_classes = 1000
-    num_batches = 5
+    num_batches = 4
     batch_size = 120
     image_w = 128
     image_h = 128
