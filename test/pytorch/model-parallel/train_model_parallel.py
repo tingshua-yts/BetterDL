@@ -34,6 +34,8 @@ class ModelParallelResNet50(ResNet):
         return self.fc(x.view(x.size(0), -1))
 
 def train(model):
+    start = torch.cuda.Event(enable_timing=True)
+    end = torch.cuda.Event(enable_timing=True)
     num_classes = 1000
     num_batches = 4
     batch_size = 120
@@ -61,6 +63,7 @@ def train(model):
             profile_memory=True,  # This will take 1 to 2 minutes. Setting it to False could greatly speedup.
             with_stack=True
     ) as p:
+        start.record()
         for i in range(num_batches):
             # generate random inputs and labels
             inputs = torch.randn(batch_size, 3, image_w, image_h)
@@ -77,7 +80,11 @@ def train(model):
             loss.backward()
             print("epoch: " + str(i) + ", loss: " + str(loss.item()))
             optimizer.step()
-            p.step()  # 不要忘记对profile manager进行迭代
+#            p.step()  # 不要忘记对profile manager进行迭代
+        end.record()
+        torch.cuda.synchronize()
+        print(start.elapsed_time(end))
+
 if __name__=="__main__":
     model = ModelParallelResNet50()
     train(model)

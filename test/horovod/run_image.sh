@@ -1,7 +1,8 @@
 #!/bin/bash
 set -x
-name=pytorch_docker2
-image=ai-studio-registry-vpc.cn-beijing.cr.aliyuncs.com/ai-studio/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+name=pytorch_horovod
+#image=ai-studio-registry.cn-beijing.cr.aliyuncs.com/tingshuai.yts/horovod:latest
+image=registry.cn-hangzhou.aliyuncs.com/ai-samples/horovod:0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1
 flag=$(sudo docker ps  | grep "$name" | wc -l)
 if [ $flag == 0 ]
 then
@@ -9,7 +10,7 @@ then
     sudo nvidia-docker rm "$name"
     sudo nvidia-docker run --name="$name" -d --net=host \
 	 -v "$1":/workspace \
+	 -v /mnt/project/BetterDL/test/horovod/.ssh:/root/.ssh \
     -w /workspace   -it $image /bin/bash
-#    -w /workspace   -it pytorch/pytorch:1.9.0-cuda10.2-cudnn7-devel /bin/bash
 fi
 sudo docker exec -it "$name" bash

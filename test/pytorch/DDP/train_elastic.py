@@ -48,7 +48,7 @@ def train():
     if os.path.exists(ckp_path):
         print(f"load checkpoint from {ckp_path}")
         checkpoint = load_checkpoint(ckp_path)
-        model.load_state_dict(checkpoint["model_state_dict"])
+        ddp_model.load_state_dict(checkpoint["model_state_dict"])
         optimizer.load_state_dict(checkpoint["optimize_state_dict"])
         first_epoch = checkpoint["epoch"]
 
@@ -61,7 +61,7 @@ def train():
         loss.backward()
         print(f"[{os.getpid()}] epoch {i} (rank = {rank}, local_rank = {local_rank}) loss = {loss.item()}\n")
         optimizer.step()
-        save_checkpoint(i, model, optimizer, ckp_path)
+        save_checkpoint(i, ddp_model, optimizer, ckp_path)
 
 def run():
     env_dict = {
