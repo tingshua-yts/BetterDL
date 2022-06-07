@@ -1,4 +1,3 @@
-
 import argparse
 import os
 from filelock import FileLock
@@ -135,7 +134,6 @@ def train(state):
         for state.batch, (data, target) in enumerate(train_loader):
             if state.batch >= steps_remaining:
                 break
-
             if args.cuda:
                 data, target = data.cuda(), target.cuda()
             state.optimizer.zero_grad()
@@ -144,8 +142,7 @@ def train(state):
             loss.backward()
             state.optimizer.step()
             if state.batch % args.log_interval == 0:
-                # Horovod: use train_sampler to determine the number of examples in
-                # this worker's partition.
+
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     state.epoch, state.batch * len(data), len(train_sampler),
                     100.0 * state.batch / len(train_loader), loss.item()))
