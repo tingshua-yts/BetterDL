@@ -1,7 +1,8 @@
 #!/bin/bash
 set -x
 name=pytorch1.9.1_docker
-image=ai-studio-registry-vpc.cn-beijing.cr.aliyuncs.com/ai-studio/pytorch:1.9.1-cuda11.1-cudnn8-runtime
+#image=ai-studio-registry.cn-beijing.cr.aliyuncs.com/ai-studio/pytorch:1.9.1-cuda11.1-cudnn8-runtime
+image=pytorch/pytorch:1.9.1-cuda11.1-cudnn8-runtime
 flag=$(sudo docker ps  | grep "$name" | wc -l)
 if [ $flag == 0 ]
 then
