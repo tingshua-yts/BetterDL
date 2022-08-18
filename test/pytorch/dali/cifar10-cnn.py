@@ -81,7 +81,7 @@ for epoch in range(10):  # loop over the dataset multiple times
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
         # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = data[0].to(device, non_blocking=True), data[1].to(device, non_blocking=True)
+        inputs, labels = data[0].to(device), data[1].to(device)
         # inputs, labels = data
 
         # zero the parameter gradients
@@ -98,39 +98,5 @@ for epoch in range(10):  # loop over the dataset multiple times
         if i % 2000 == 1999:    # print every 2000 mini-batches
             print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
             running_loss = 0.0
-# print(prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=2))
-# with torch.profiler.profile(
-#         activities=[
-#                 torch.profiler.ProfilerActivity.CPU,
-#                 torch.profiler.ProfilerActivity.CUDA],
-#         schedule=torch.profiler.schedule(wait=1, warmup=1, active=5, repeat=2),
-#         on_trace_ready=torch.profiler.tensorboard_trace_handler('./tmp/tensorboard/num_worker_' + str(num_worker)),
-#         #on_trace_ready=trace_handler,
-#         record_shapes=True,
-#         profile_memory=True,
-#         with_stack=True
-# ) as prof:
-#     for epoch in range(10):  # loop over the dataset multiple times
-#         running_loss = 0.0
-#         for i, data in enumerate(trainloader, 0):
-#             # get the inputs; data is a list of [inputs, labels]
-#             inputs, labels = data[0].to(device), data[1].to(device)
-#            # inputs, labels = data
-
-#             # zero the parameter gradients
-#             optimizer.zero_grad()
-
-#             # forward + backward + optimize
-#             outputs = net(inputs)
-#             loss = criterion(outputs, labels)
-#             loss.backward()
-#             optimizer.step()
-
-#             # print statistics
-#             running_loss += loss.item()
-#             if i % 2000 == 1999:    # print every 2000 mini-batches
-#                 print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
-#                 running_loss = 0.0
-#             prof.step()
 
 print('Finished Training , total time {}'.format(time.time() - t0))
