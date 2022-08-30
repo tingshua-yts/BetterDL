@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
-
+import numpy as np
 import torchvision
 import torchvision.transforms as transforms
 
@@ -33,8 +33,10 @@ parser.add_argument("--batch_size","-bs", type=int, default="128")
 parser.add_argument("--test_batch_size","-tbs", type=int, default="100")
 parser.add_argument("--device_id", type=int, help="gpu device id", default=0)
 parser.add_argument("--epoch", type=int, default=10)
+parser.add_argument("--dumy_data", action='store_true')
 
 args = parser.parse_args()
+use_dumy=args.dumy_data
 total_epoch = args.epoch
 use_dali = args.dali
 batch_size = args.batch_size
@@ -48,7 +50,11 @@ checkpoint_path = "./checkpoint" if use_dali else "./checkpoint_pytorch"
 print('==> Preparing data..')
 
 data_start = time.time()
-if use_dali:
+if use_dumy:
+    print("====> use dumy dataloader")
+    trainloader = [(torch.rand(batch_size, 3, 32, 32, device=device), torch.zeros(batch_size, dtype=torch.int64, device=device) ) for i in range(391)]
+    testloader = [(torch.rand(test_batch_size, 3, 32, 32, device=device), torch.zeros(test_batch_size,dtype=torch.int64, device=device)) for i in range(100)]
+elif use_dali:
     print("====> use dali dataloader")
     train_dali_transformer = DaliCifarTransformer(batch_size=batch_size, num_threads=8,
                                                   type="train", root="./tmp/data", device_id=device_id)
@@ -80,6 +86,7 @@ else:
         root=DATA_DIR, train=False, download=True, transform=transform_test)
     testloader = torch.utils.data.DataLoader(
         testset, batch_size=test_batch_size, shuffle=False, num_workers=8)
+print(f"train dataloader length: {len(trainloader)}, test dataloader length: {len(testloader)}")
 
 prepare_time = time.time() - data_start
 print(f'==> success Preparing data: {prepare_time}')
@@ -139,7 +146,7 @@ def train(epoch,prof):
         inputs, targets = inputs.to(device), targets.to(device)
         if batch_idx == 0:
             print(f"input shape: {inputs.shape}, inputs device id: {inputs.get_device()}")
-            print(f"target shape: {targets.shape}, targets device id: {targets.get_device()}")
+            print(f"target shape: {targets.shape}, targets device id: {targets.get_device()}, type:{targets.dtype}")
         optimizer.zero_grad()
         outputs = net(inputs)
         loss = criterion(outputs, targets)

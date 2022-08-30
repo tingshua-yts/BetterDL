@@ -30,7 +30,6 @@ def DaliCifarTransformer(type="train", root="./tmp/data"):
     external_iter = DaliCifarDataset(pipe.batch_size, type, root=root)
     images, labels = fn.external_source(source=external_iter, num_outputs=2 )
     if type == "train":
-        logging.info("aaaaa")
         # 1) transforms.RandomCrop(CROP_SIZE, padding=4) dali中的对应实现
         # 1.1) 先通过paste实现padding
         images = fn.paste(images.gpu(), device="gpu", ratio=1.25, fill_value=0)
