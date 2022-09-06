@@ -142,8 +142,13 @@ def main(unused_argv):
     # Not using existing servers. Create an in-process server.
     server = tf.train.Server(
         cluster, job_name=FLAGS.job_name, task_index=FLAGS.task_index)
+    # ps waiting for workers join
     if FLAGS.job_name == "ps":
+
+      print("ps waiting join...")
+      # Blocks until the server has shut down.
       server.join()
+      print("ps after waiting join")
 
   is_chief = (FLAGS.task_index == 0)
   if FLAGS.num_gpus > 0:
@@ -258,6 +263,8 @@ def main(unused_argv):
 
       sess = sv.prepare_or_wait_for_session(server_grpc_url, config=sess_config)
     else:
+      # Make sure the model is ready to be used.
+      # Create a session on 'master', recovering or initializing the model as needed, or wait for a session to be ready
       sess = sv.prepare_or_wait_for_session(server.target, config=sess_config)
 
     print("Worker %d: Session initialization complete." % FLAGS.task_index)
