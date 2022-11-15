@@ -1,0 +1,30 @@
+name: "resnet51"
+platform: "pytorch_libtorch"
+max_batch_size: 256
+input [
+  {
+    name: "INPUT__0"
+    data_type: TYPE_FP32
+    dims: [ 3, -1, -1 ]
+  }
+]
+output [
+  {
+    name: "OUTPUT__0"
+    data_type: TYPE_FP32
+    dims: [ 1000 ]
+    label_filename: "labels.txt"
+  }
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+    gpus: [ 0 ]
+  },
+  {
+    count: 2
+    kind: KIND_GPU
+    gpus: [ 1, 2 ]
+  }
+]

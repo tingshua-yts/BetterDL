@@ -1,0 +1,1 @@
+tritonserver --model-repository=/mnt/project/BetterDL/test/triton/python_backend/preprocessing/model_repository
