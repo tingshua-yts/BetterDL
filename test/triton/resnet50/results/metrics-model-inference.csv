@@ -1,0 +1,12 @@
+Model,Batch,Concurrency,Model Config Path,Instance Group,Max Batch Size,Satisfies Constraints,Throughput (infer/sec),p99 Latency (ms)
+resnet50,1,2,resnet50_config_default,2:GPU,128,Yes,314.9,7.6
+resnet50,1,1,resnet50_config_default,2:GPU,128,Yes,174.3,6.0
+resnet50,1,2,resnet50_config_3,8:GPU,2,Yes,298.9,9.1
+resnet50,1,1,resnet50_config_3,8:GPU,2,Yes,161.9,8.0
+resnet50,1,2,resnet50_config_2,8:GPU,1,Yes,293.9,7.6
+resnet50,1,1,resnet50_config_2,8:GPU,1,Yes,163.2,6.8
+resnet50,1,2,resnet50_config_5,16:GPU,2,Yes,279.5,9.5
+resnet50,1,1,resnet50_config_5,16:GPU,2,Yes,150.9,7.0
+resnet50,1,1,resnet50_config_4,16:GPU,1,Yes,150.9,7.1
+resnet50,1,2,resnet50_config_4,16:GPU,1,Yes,146.6,7.3
+

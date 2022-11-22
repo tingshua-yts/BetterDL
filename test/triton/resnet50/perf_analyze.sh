@@ -1,0 +1,1 @@
+perf_analyzer -m resnet50  --shape INPUT__0:3,224,224 --concurrency-range 24:160:8

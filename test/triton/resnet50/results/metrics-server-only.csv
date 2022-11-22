@@ -1,0 +1,10 @@
+Model,GPU UUID,GPU Memory Usage (MB),GPU Utilization (%),GPU Power Usage (W)
+triton-server,GPU-b0e73ba5-6116-aa24-16bb-fba4c4471009,1201.0,0.0,59.5
+triton-server,GPU-2045ad6e-474c-f9ca-1dda-46af77449dab,1201.0,0.0,62.0
+triton-server,GPU-e693b2dc-98ad-d686-7616-622b08f9fdb2,1201.0,0.0,59.0
+triton-server,GPU-bac45b2c-1a98-e26b-07d5-8669de0bbcc1,1201.0,0.0,59.0
+triton-server,GPU-a8cc1d04-7807-7ca7-0ec6-78289954ee63,1201.0,0.0,59.0
+triton-server,GPU-c3514a02-ff35-ff4a-8ae0-a6e41a09b32f,1201.0,0.0,58.8
+triton-server,GPU-8becb8f1-04e4-d570-b032-2e235aefb383,1201.0,0.0,62.0
+triton-server,GPU-9823fb53-9df7-0a73-09a1-6643e3d24c40,1201.0,0.0,59.5
+

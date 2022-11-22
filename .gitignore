@@ -1,6 +1,7 @@
 data
 model
 *.pt
+*.ckpt
 *.onnx
 **/tmp/
 **/__pycache__
