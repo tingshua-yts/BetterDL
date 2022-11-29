@@ -1,1 +1,1 @@
-perf_analyzer -m resnet50  --shape INPUT__0:3,224,224 --concurrency-range 24:160:8
+perf_analyzer -m resnet50  --shape INPUT__0:3,224,224  -u 192.168.9.6:8000 --num-of-sequences=99999999

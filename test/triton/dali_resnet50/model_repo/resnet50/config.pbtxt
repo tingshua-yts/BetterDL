@@ -1,0 +1,26 @@
+name: "resnet50"
+platform: "pytorch_libtorch"
+max_batch_size: 256
+input [
+  {
+    name: "INPUT__0"
+    data_type: TYPE_FP32
+    dims: [ 3, 224, 224 ]
+  }
+]
+output [
+  {
+    name: "OUTPUT_0"
+    data_type: TYPE_FP32
+    dims: [ 1000 ]
+    label_filename: "labels.txt"
+  }
+]
+dynamic_batching {}
+instance_group [
+  {
+    count: 4
+    kind: KIND_GPU
+    gpus: [ 0 ]
+  }
+]

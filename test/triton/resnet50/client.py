@@ -22,7 +22,7 @@ if __name__ == '__main__':
     outputs.append(httpclient.InferRequestedOutput('OUTPUT__0', binary_data=False, class_count=3))  # class_count 表示 topN 分类
     #outputs.append(httpclient.InferRequestedOutput('OUTPUT__0', binary_data=False))  # 获取 1000 维的向量
 
-    results = triton_client.infer('resnet50', inputs=inputs, outputs=outputs)
+    results = triton_client.infer('resnet50', request_id="001xxx", inputs=inputs, outputs=outputs)
     output_data0 = results.as_numpy('OUTPUT__0')
 
     print(output_data0.shape)

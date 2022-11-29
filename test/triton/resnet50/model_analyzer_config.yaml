@@ -1,0 +1,23 @@
+model_repository: ./model_repo
+
+run_config_search_disable: True
+override_output_model_repository: True
+output_model_repository_path: "./results2"
+profile_models:
+  resnet50:
+    constraints:
+      perf_latency_p99:
+        max: 200
+    parameters:
+      concurrency:
+        start: 96
+        stop: 256
+        step: 8
+    model_config_parameters:
+      max_batch_size: 128
+      dynamic_batching:
+        max_queue_delay_microseconds: 200
+      instance_group:
+        - kind: KIND_GPU
+          count: [1, 2, 4, 8]
+          gpus: [0]

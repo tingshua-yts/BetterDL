@@ -24,3 +24,6 @@ instance_group [
     gpus: [ 0 ]
   }
 ]
+response_cache {
+  enable: True
+}
