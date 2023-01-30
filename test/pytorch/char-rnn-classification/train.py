@@ -34,6 +34,7 @@ def train(category_tensor, line_tensor):
     hidden = rnn.initHidden()
     optimizer.zero_grad()
 
+    # 遍历每一个letter
     for i in range(line_tensor.size()[0]):
         output, hidden = rnn(line_tensor[i], hidden)
 
