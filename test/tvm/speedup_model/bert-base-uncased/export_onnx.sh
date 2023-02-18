@@ -1,0 +1,1 @@
+python -m transformers.onnx --model=distilbert-base-uncased tmp/distilbert-base-uncased/onnx
