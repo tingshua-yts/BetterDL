@@ -1,17 +1,10 @@
-import transformers
-
-from transformers import BertModel, BertTokenizer, BertConfig
-import numpy
 import time
 import torch
 import tvm
 import tvm.relay
-import tvm.relay as relay
 from tvm.contrib import graph_executor
-from tvm.autotvm.tuner import XGBTuner
-from tvm import autotvm
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
-from transformers import PretrainedConfig
+import numpy
 
 tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased", )
 
@@ -28,13 +21,6 @@ model.eval()
 for p in model.parameters():
     p.requires_grad_(False)
 
-# Creating the trace
-
-indexed_tokens = segments_ids = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
-
-# 转换为batch size为1的tensor。Creating a dummy input
-tokens_tensor = torch.tensor([indexed_tokens])
-segments_tensors = torch.tensor([segments_ids])
 
 # TODO 这里要设置为strict，否则会报错，但是不理解为什么模型中会有dict; 这里需要进一步理解distilbert-base-uncased的output
 # traced_model = torch.jit.trace(model, [tokens_tensor, segments_tensors])
@@ -46,27 +32,20 @@ traced_model.save("tmp/distilbert-base-uncased/onnx/model.torchscript")
 traced_model.eval()
 for p in traced_model.parameters():
     p.requires_grad_(False)
-model.cuda()
+traced_model.cuda()
 tt_c = inputs["input_ids"].cuda()
 st_c = inputs["attention_mask"].cuda()
-rest_pt = model(tt_c, st_c)
+res_py = traced_model(tt_c, st_c)
 torch.cuda.synchronize()
+print(f"res_py:{res_py}")
 def y():
     for i in range(100):
-        model(tt_c, st_c)
+        traced_model(tt_c, st_c)
     torch.cuda.synchronize()
 start = time.time()
 y()
 end = time.time()
 print(f"pytorch cuda total time: {(end-start)}")
-
-################### convert to onnx ###############
-
-# onnx_inputs = ({{"input_ids": inputs["input_ids"], "attention_mask":inputs["attention_mask"], "return_dict": False}})
-# input_names=["input_ids", "attention_mask", "return_dict"]
-# output_names=["output0"]
-
-# torch.onnx.export(model, onnx_inputs, '.tmp/distilbert-base-uncased/onnx/model.onnx', verbose=True,input_names=input_names, output_names=output_names)
 
 ################### convert to tvm ################
 shape_list = [("input_ids", inputs["input_ids"].size()), ("attention_mask", inputs["attention_mask"].size())]
@@ -90,9 +69,23 @@ with tvm.transform.PassContext(opt_level=3):
 module = graph_executor.GraphModule(lib["default"](dev))
 module.set_input("input_ids", tt_a)
 module.set_input("attention_mask", st_a)
+module.set_input(**params_bert)
 module.run()
 
-# todo, 模型结果assert比较
+# Blog中的output由两个index分别获取结果，但是在实际测试中，仅有index0来表示结果。说明模型的output在blog中为2，但是当前测试为1
+
+tvmOutput = module.get_output(0) # index为output的下标，每个output中包含自己的batch size
+torchOutput = res_py[0]
+# res_py为一个tuple类型，其内容为：res_py:(tensor([[0.0831, 0.0436]], device='cuda:0'),),我们想要的output在index为0的位置
+# tvmOutput为TVM中的DNArray，其已经是从tvm 的output index为0的位置获取完的结果
+# 下面的比较思路都是将torchOutput和tvmOutput转换为numpy进行比较
+print(f"torchOutput:{torchOutput}\t tvmOutput:{tvmOutput}")
+pyRes0, pyRes1 = torchOutput.cpu().numpy()[0][0], torchOutput.cpu().numpy()[0][1]
+tvmRes0, tvmRes1 = tvmOutput.asnumpy()[0][0], tvmOutput.asnumpy()[0][1]
+print(f"pyRes0:{pyRes0}\tpyRes1:{pyRes1}\ttvmRes0:{tvmRes0}\ttvmRes1:{tvmRes1}")
+diff = (numpy.abs((pyRes0 - tvmRes0)), numpy.abs((pyRes1 - tvmRes1)))
+print(f"diff: {diff}")
+
 def x():
     for i in range(100):
         module.run()

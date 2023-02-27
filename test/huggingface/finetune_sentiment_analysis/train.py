@@ -434,5 +434,9 @@ def bert_predict(model, test_dataloader):
 # Compute predicted probabilities on the test set
 probs = bert_predict(bert_classifier, val_dataloader)
 
-# Evaluate the Bert classifier
-#evaluate_roc(probs, y_val)
+# Get predictions from the probabilities
+threshold = 0.9
+preds = np.where(probs[:, 1] > threshold, 1, 0)
+
+# Number of tweets predicted non-negative
+print("Number of tweets predicted non-negative: ", preds.sum())

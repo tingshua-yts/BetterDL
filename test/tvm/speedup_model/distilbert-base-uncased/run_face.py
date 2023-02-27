@@ -15,7 +15,12 @@ inputs:
          attention_mask
 """
 with torch.no_grad():
-    logits = model(**inputs).logits
+    output = model(**inputs)
+    print(f"output:{output}")
+    """
+        output:SequenceClassifierOutput(loss=None, logits=tensor([[-0.0143, -0.2299]]), hidden_states=None, attentions=None)
+    """
+    logits = output.logits
 
 input_ids=inputs["input_ids"]
 print(f"type(input_ids):{type(input_ids)}")
