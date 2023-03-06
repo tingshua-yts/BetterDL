@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/mnt/tvm/apache-tvm-src-v0.10.0/include",
+                "/mnt/tvm/apache-tvm-src-v0.10.0/3rdparty/dlpack/include",
+                "/mnt/tvm/apache-tvm-src-v0.10.0/3rdparty/dmlc-core/include"
+
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
