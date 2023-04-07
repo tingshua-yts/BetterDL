@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -150,6 +151,7 @@ def main(unused_argv):
       server.join()
       print("ps after waiting join")
 
+
   is_chief = (FLAGS.task_index == 0)
   if FLAGS.num_gpus > 0:
     # Avoid gpu allocation conflict: now allocate task_num -> #gpu
@@ -203,7 +205,7 @@ def main(unused_argv):
         replicas_to_aggregate = num_workers
       else:
         replicas_to_aggregate = FLAGS.replicas_to_aggregate
-
+      # 对同步场景需要对opt进行一次wrapper
       opt = tf.train.SyncReplicasOptimizer(
           opt,
           replicas_to_aggregate=replicas_to_aggregate,

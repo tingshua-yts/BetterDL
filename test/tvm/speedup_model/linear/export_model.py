@@ -29,6 +29,7 @@ print(output)
 
 ########### get torchscript ################
 traced_model = torch.jit.trace(model, [x, y])
+print(type(traced_model))
 print(traced_model.code)
 print(traced_model.graph)
 torch.jit.save(traced_model, "tmp/linear/torchscript/lieanr-1.pt")
@@ -63,4 +64,3 @@ module.set_input("y", tvm_y)
 module.run()
 tvmOutput = module.get_output(0) # index为output的下标，每个output中包含自己的batch size
 print(f"tvmOutput:{tvmOutput}")
-

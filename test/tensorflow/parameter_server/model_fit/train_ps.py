@@ -20,6 +20,7 @@ def create_in_process_cluster(num_workers, num_ps):
     if multiprocessing.cpu_count() < num_workers + 1:
         worker_config.inter_op_parallelism_threads = num_workers + 1
 
+    # 启动worker
     for i in range(num_workers):
         tf.distribute.Server(
             cluster_spec,
@@ -28,6 +29,7 @@ def create_in_process_cluster(num_workers, num_ps):
             config=worker_config,
             protocol="grpc")
 
+    # 启动ps
     for i in range(num_ps):
         tf.distribute.Server(
             cluster_spec,

@@ -4,6 +4,8 @@ import torch.distributed as dist
 import torch.multiprocessing as mp
 import torch.nn as nn
 import torch.optim as optim
+import logging
+logging.basicConfig(format='[%(asctime)s] %(filename)s %(funcName)s():%(lineno)i [%(levelname)s] %(message)s', level=logging.DEBUG)
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 
@@ -11,9 +13,12 @@ def run_worker(rank, world_size):
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '29500'
     os.environ['NCCL_DEBUG'] = "INFO"
+    os.environ['WORLD_SIZE'] = '3'
     print(str(os.getpid()) + ":" + str(rank) + ":" + world_size)
     # create default process group
-    dist.init_process_group(backend="nccl", rank=rank, world_size=world_size)
+    dist.init_process_group(backend="nccl", rank=rank)
+    print(f"world size after init: {torch.distributed.get_world_size()}")
+    print(f"is dist inited:{torch.distributed.is_initialized()}")
 
     # create local model
     model = nn.Linear(10, 10).to(rank)
