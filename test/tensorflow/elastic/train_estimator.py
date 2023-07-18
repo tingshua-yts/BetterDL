@@ -214,12 +214,14 @@ def main(unused_argv):
   path_train = os.path.join(FLAGS.data_dir, 'train.csv')
   path_eval = os.path.join(FLAGS.data_dir, 'test.csv')
 
+  # 启动tf server
   server = start_tf_server()
   task_type, _ = get_task_info()
   if task_type == "ps":
     logging.info("ps server waiting for join...")
     server.join()
 
+  # 生成配置文件
   estimator_config = generate_estimator_config()
   classifier = tf.estimator.Estimator(
     model_fn=my_model,
